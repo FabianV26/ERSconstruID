@@ -1,0 +1,808 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <title>Ordenes de Compra</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" href="ordenCompra.css">
+</head>
+
+<body class="dataTables">
+    <div id="esconder2">
+        <div class="contenedornav">
+            <div class="nav">
+            <button onclick="location.href='../index.html';" class="navizquierdo" >Salir</button>
+                <button onclick="imprimir()" class="navderecho">Imprimir/Guardar</button>
+            </div>
+        </div>
+       <!-- <button onclick="imprimir()" class="button">Imprimir/Guardar</button>-->
+    </div>
+<div id="esconder3" class="pagina">
+<div class="seccion1">
+  
+<div class="titulo">
+    <img src="img/logoConstruID.png" height="120">
+    <h1>ORDEN DE COMPRA</h1>
+<table class="encabezado">
+    <tr>
+        <td>
+            <b>Num. Orden</b>
+        </td>
+        <td>
+            <input id="numOrden1" disabled></input>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Fecha</b>
+        </td>
+        <td>
+            <input id="fecha" disabled></input>
+        </td>
+    </tr>
+
+</table>
+</div>
+
+<img src="img/linea.png" height="3px" width="875px" class="logo">
+<table class="primerForm">
+    <tr>
+        <td>
+            <b>Señores:</b>
+        </td>
+        <td>
+        <select id="proveedor" type="text" required onchange="asignarValor();"><option value="">Seleccione un Proveedor</option>
+        </select>
+        
+        </td>
+        
+        <td>
+            <b>Num Orden:</b>
+        </td>
+        <td>
+            <input id="numOrden2" disabled></input>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <b>Cedula:</b>
+        </td>
+        <td>
+            <input id="cedula" disabled ></input>
+        </td>
+        
+        <td>
+            <b>Proyecto:</b>
+        </td>
+        <td>
+        <select id="codigo" type="text"  required></select>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <b>Vendedor:</b>
+        </td>
+        <td>
+            <input id="numOrden" placeholder="Nombre del Vendedor"></input>
+        </td>
+        
+        <td>
+            <b>Fecha de envio:</b>
+        </td>
+        <td>
+            <input id="numOrden" type="date" class="date" placeholder="Agregar Num.Orden"></input>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <b>Telefono:</b>
+        </td>
+        <td>
+            <input id="telefono" disabled></input>
+        </td>
+        
+        <td>
+            <b>PEP:</b>
+        </td>
+        <td>
+            <select name="pep" id="pep" onchange="cargarPueblos();" type="text"  required>
+                <option value="">Seleccione un Pep...</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <b>Email:</b>
+        </td>
+        <td>
+            <input id="correoProveedor" disabled></input>
+        </td>
+        
+        <td>
+            <b>Cuenta</b>
+        </td>
+        <td>
+            <select name="cuenta" id="cuenta" type="text"  required>
+                <option value="">Seleccione una Cuenta...</option>
+            
+            </select>
+        </td>
+    </tr>
+    
+
+</table>
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="esconder1">
+            <button id="btnNuevo" class="btn btn-primary" data-toggle="tooltip" title="Nuevo Producto"><svg
+                    class="bi bi-plus-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z" />
+                </svg></button>
+                </div>
+            <!--Modal-->
+            <div class="modal fade" id="modalAltaEdicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-light">
+                            <h5 class="modal-title" id="exampleModalLabel">Añadir Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form>
+                            <div class="modal-body">
+                                <input id="id" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                
+                                <div class="form-group">
+                                    <label>Descripción</label>
+                                    <input id="correo" type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad</label>
+                                    <input id="numTelefono" type="number" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Unidad</label>
+                                    <input id="identificacion" type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>IVA</label>
+                                    <input id="direccion" type="number" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio</label>
+                                    <input id="precio" type="number" class="form-control" required>
+                                </div>
+                              
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                <button type="submit" value="btnGuardar" class="btn btn-primary" translate="1">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="tm-bg-transparent-black tm-contact-box-pad">
+                <table id="tablaProductos" class="table table-striped table-bordered" style="width:100%">
+                    <thead class="text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cod</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Und</th>
+                            <th>IVA</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="contenedor">
+<table class="tabla3">
+<tr>
+    <td>
+    <label>Observaciones:</label>
+    <textarea rows="4" cols="65"></textarea>
+    </td>
+    <td>
+    <div id="tabla2">
+        <table>
+            <tr>
+                <td>Subtotal</td>
+                <td>₡<input id="subtotal" disabled></input></td>
+              
+            </tr>
+            <tr>
+                <td>Descuento</td>
+                <td>₡<input id="descuento" value=0 type="number" onchange="descuento();"></input></td>
+                
+               
+            </tr>
+            <tr>
+                <td>IVA</td>
+                <td>₡<input id="iva" disabled></td>
+            
+            
+            </tr>
+            <tr>
+                <td>Flete</td>
+                <td>₡<input type="number" value=0 id="fletes" onchange="descuento();"></td>
+            
+            
+            </tr>
+            
+            <tfoot >
+                <tr>
+                    <td>Total pago</td>
+                    <td>₡<input id="total" disabled></td>
+
+                </tr>
+            </tfoot>
+        </table>
+        </div>
+        </td>
+        </table>
+    
+</div>
+
+<div >
+    <img src="img/firma.png" class="centrarImg" height="90">
+    
+</div>
+
+<img src="img/linea.png" height="3px" width="875px" class="logo">
+<div>
+    <table width="890px" margin-left="15px">
+        <tr>
+            <td> <b>Fecha de Impresión  </b><input id="fecha2" disabled></input></td>
+            <td><b>Hecho por: </b><input id="fecha2" value="Nombre del autor"></input></td>
+            <td>Página 1 de 1 </b></td>
+        </tr>
+    </table>
+
+</div>
+
+<img src="img/piePagina.JPG" class="centrarImg2" height="100px" class="logo">
+<img src="img/linea.png" height="3px" width="875px" class="logo">
+</div>
+</div>
+
+
+
+
+
+
+</body>
+
+<style>
+
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="ordenCompra.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.2/dist/sweetalert2.all.min.js"></script>
+
+
+
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script><script>
+    numOrden =0;
+  function imprimir() {
+        esconder1.style.visibility = 'hidden';
+        esconder2.style.visibility = 'hidden';
+        esconder3.style.cssText = 'margin-left: 0;';
+        
+        $('#tablaProductos tr > *:nth-child(8)').hide();
+
+        db.ref("ordenCompra").on('value', (snapshot) => {
+        
+           snapshot.val().nOrdenes;
+            numOrden= snapshot.val().nOrdenes+1;
+            db.ref().child("ordenCompra").update({
+                nOrdenes: numOrden,
+                
+
+
+            });
+
+      });
+        
+        
+        window.print();
+    }
+        var config = {
+            apiKey: "AIzaSyByj43ga3fBT8k3yo5qJhuaLvsqKCos4Ys",
+            authDomain: "presupuestosconstruid-37693.firebaseapp.com",
+            databaseURL: "https://presupuestosconstruid-37693-default-rtdb.firebaseio.com",
+            projectId: "presupuestosconstruid-37693",
+            storageBucket: "presupuestosconstruid-37693.appspot.com",
+            messagingSenderId: "922271215592",
+            appId: "1:922271215592:web:5265b9883763d3a383fe5d",
+            measurementId: "G-WJLQLPXBVP"
+        };
+
+        firebase.initializeApp(config); //inicializamos firebase
+        var db = firebase.database();
+
+
+    const date = new Date();
+    const hoy = date.getDate();
+    const mesActual = date.getMonth() + 1;
+    const añoActual = date.getFullYear();
+var fecha = hoy + "/" + mesActual + "/" + añoActual;
+
+  document.querySelector("#fecha").value = fecha;
+  document.querySelector("#fecha2").value = fecha;
+ var scores = [];
+         var $select = $('#codigo');
+    db.ref("proyectos").once("value", function (snap) {
+        snap.forEach(function (childSnap) {
+            scores.push(childSnap.val());
+            $select.append('<option>' + childSnap.val().nombre + '</option>');
+
+        });
+    });
+
+        var $select2 = " ";
+        var proveedores = [];
+        var $select2 = $('#proveedor');
+        db.ref("proveedores").once("value", function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                proveedores.push(childSnapshot.val());
+                $select2.append('<option>' + childSnapshot.val().codigo + '</option>');
+
+
+            });
+        });
+   
+  
+
+
+
+
+
+
+        function cargarProvincias() {
+                var array = ["pep01",
+                    "pep02",
+                    "pep03",
+                    "pep04",
+                    "pep05",
+                    "pep06",
+                    "pep07",
+                    "pep08",
+                    "pep09",
+                    "pep10",
+                    "pep11",
+                    "pep12",
+                    "pep13",
+                    "pep14",
+                    "pep15",
+                    "pep16",
+                    "pep17",
+                    "pep18",
+                    "pep19",
+                    "pep20",
+                    "pep21",
+                    "pep22",
+                    "pep23",
+                    "pep24"
+
+                ];
+
+                addOptions("pep", array);
+
+            }
+            var cuentapep = 0;
+
+            var pep = [
+                "Pep 21X-01-C / Obras preliminares",
+                "Pep 21X-02-C / Fundaciones",
+                "Pep 21X-03-C / Estructura y escaleras",
+                "Pep 21X-04-C / Entrepiso",
+                "Pep 21X-05-C / Techos - Impermeabilizaciones",
+                "Pep 21X-06-C / Revestimiento y Acabados",
+                "Pep 21X-07-C / Herreria, vidrios y aluminio",
+                "Pep 21X-08-C / Carpinteria, Puertas y Cerrajería",
+                "Pep 21X-09-C / Instalaciones eléctricas",
+                "Pep 21X-10-C / Instalaciones sanitarias",
+                "Pep 21X-11-C / Equipamiento Interno",
+                "Pep 21X-12-C / Equipamiento Externo",
+                "Pep 21X-13-C / Obras Exteriores",
+                "Pep 21X-14-C / Equipos Menores",
+                "Pep 21X-15-C / Movimiento de Tierra",
+                "Pep 21X-16-C / Cloacas",
+                "Pep 21X-17-C / Acueducto",
+                "Pep 21X-18-C / Drenajes",
+                "Pep 21X-19-C / Electricidad Urbana",
+                "Pep 21X-20-C / Aceras, Brocales",
+                "Pep 21X-21-C / Vialidad y Estacionamiento",
+                "Pep 21X-22-C / Incorporacion de servicios",
+                "Pep 21X-23-C / Topografia",
+                "Pep 21X-24-C / Indirectos"
+
+            ];
+            console.log(pep);
+
+            //Función para agregar opciones a un <select>.
+            function addOptions(domElement, array) {
+                var selector = document.getElementsByName(domElement)[0];
+                for (provincia in array) {
+
+                    var opcion = document.createElement("option");
+                    opcion.text = pep[provincia];
+                    // Añadimos un value a los option para hacer mas facil escoger los pueblos
+                    opcion.value = array[provincia].toLowerCase()
+                    selector.add(opcion);
+                }
+            }
+
+
+            var proyectoNombre = [];
+            var pep01 = [];
+            var pep02 = [];
+            var pep03 = [];
+            var pep04 = [];
+            var pep05 = [];
+            var pep06 = [];
+            var pep07 = [];
+            var pep08 = [];
+            var pep09 = [];
+            var pep10 = [];
+            var pep11 = [];
+            var pep12 = [];
+            var pep13 = [];
+            var pep14 = [];
+            var pep15 = [];
+            var pep16 = [];
+            var pep17 = [];
+            var pep18 = [];
+            var pep19 = [];
+            var pep20 = [];
+            var pep21 = [];
+            var pep22 = [];
+            var pep23 = [];
+            var pep24 = [];
+            db.ref("proyectos").once("value", function (snap) {
+
+                snap.forEach(function (childSnap) {
+
+                    proyectoNombre.push(childSnap.val().nombre);
+                    console.log(proyectoNombre[0]);
+                });
+
+
+                console.log(proyectoNombre[0]);
+
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-01-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep01.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ".");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-02-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep02.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-03-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep03.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-04-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep04.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-05-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep05.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-06-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep06.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-07-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep07.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-08-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep08.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-09-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep09.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-10-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep10.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-11-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep11.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-12-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep12.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-13-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep13.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-14-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep14.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-15-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep15.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-16-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep16.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-17-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep17.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-18-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep18.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-19-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep19.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-20-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep20.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-21-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep21.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-22-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep22.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-23-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep23.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+                db.ref("proyectos").child(proyectoNombre[0]).child("Pep 21X-24-C").once("value", function (snap) {
+                    snap.forEach(function (childSnap) {
+                        pep24.push(childSnap.val().nombre + " / " + childSnap.val().codigo + ". ");
+
+                    });
+                });
+
+
+            });
+
+
+
+
+            function cargarPueblos() {
+                // Objeto de provincias con pueblos
+                var listaPueblos = {
+
+                    pep01,
+                    pep02,
+                    pep03,
+                    pep04,
+                    pep05,
+                    pep06,
+                    pep07,
+                    pep08,
+                    pep09,
+                    pep10,
+                    pep11,
+                    pep12,
+                    pep13,
+                    pep14,
+                    pep15,
+                    pep16,
+                    pep17,
+                    pep18,
+                    pep19,
+                    pep20,
+                    pep21,
+                    pep22,
+                    pep23,
+                    pep24
+                }
+
+                var provincias = document.getElementById('pep')
+                var pueblos = document.getElementById('cuenta')
+                var provinciaSeleccionada = provincias.value
+
+                // Se limpian los pueblos
+                pueblos.innerHTML = '<option value="">Seleccione una Cuenta...</option>'
+
+                if (provinciaSeleccionada !== '') {
+                    // Se seleccionan los pueblos y se ordenan
+                    provinciaSeleccionada = listaPueblos[provinciaSeleccionada]
+
+                    // Insertamos los pueblos
+                    provinciaSeleccionada.forEach(function (pueblo) {
+
+
+                        let opcion = document.createElement('option')
+                        opcion.value = pueblo
+                        opcion.text = pueblo
+                        pueblos.add(opcion)
+                    });
+                }
+
+            }
+
+            // Iniciar la carga de provincias solo para comprobar que funciona
+            cargarProvincias();
+
+
+
+    function descuento() {
+
+        
+        document.getElementById('total').value = parseFloat($.trim($('#subtotal').val())) + parseFloat($.trim($('#iva').val()))+ parseInt($.trim($('#fletes').val()))- parseInt($.trim($('#descuento').val()));
+
+
+    }
+
+
+    db.ref("ordenCompra").on('value', (snapshot) => {
+
+    var identificador = "";
+        if (snapshot.val().nOrdenes >= 10000) {
+            identificador = "0C0" +snapshot.val().nOrdenes;
+        } else if (snapshot.val().nOrdenes >= 1000){
+            identificador = "0C00" + snapshot.val().nOrdenes;
+        } else if (snapshot.val().nOrdenes >= 100) {
+            identificador = "0C000" + snapshot.val().nOrdenes;
+        } else {
+            identificador = "0C0000" + snapshot.val().nOrdenes;
+        }
+        document.getElementById('numOrden1').value = identificador;
+         document.getElementById('numOrden2').value = identificador;
+        
+
+    });
+            function asignarValor() {
+
+                var combo = document.getElementById('proveedor');
+                var opcion = combo.value;
+                console.log(opcion);
+
+
+                db.ref("proveedores").once("value", function (snapshot) {
+                    snapshot.forEach(function (childSnapshot) {
+                        proveedores.push(childSnapshot.val());
+                        if (opcion==childSnapshot.val().codigo){
+
+
+                            db.ref("proveedores").child(childSnapshot.val().id).on('value', (snapshot) => {
+
+                                console.log(snapshot.val());
+
+                                document.getElementById('telefono').value = snapshot.val().telefono;
+
+                                document.getElementById('cedula').value = snapshot.val().identificacion;
+                                document.getElementById('correoProveedor').value = snapshot.val().correo;
+
+
+                            });
+
+                        }
+
+
+                    });
+                });
+                
+
+                
+
+                
+
+                }
+
+</script>
+
+</html>

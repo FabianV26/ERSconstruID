@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Gastos</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+     <!-- MORRIS CHART STYLES-->
+    <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<body>
+    
+
+
+   
+    <div class="modal fade" id="modalDescuento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-light">
+                <h5 class="modal-title" id="exampleModalLabel">Escoge el descuento que quieres asignar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="descuentoForm">
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                    <select id="tipoDescuento" type="text" class="form-control" onChange="mostrar(this.value);" required>
+                        <option value="sinDescuento" selected>Sin descuento</option>
+                        <option value="descuentoP">Descuento en porcentaje</option>
+                        <option value="descuentoD">Descuento de dinero</option>
+                    </select>
+                    </div>
+                    
+                    <div id="descuentoPo" style="display: none;" class="form-group">
+                    
+                        <label>Descuento en Porcentaje</label>
+                        <input id="descuentoPorcentaje" type="number"   step="0.01" class="form-control" required>
+                    </div>
+                    
+                    <div id="descuentoDi" style="display: none;" class="form-group">
+                        <h5 class="modal-title" id="exampleModalLabel">Descuento en Dinero
+                        </h5>
+                        <label>Ingresar monto de la factura</label>
+                        <input id="montoFactura" type="number" step="0.01" class="form-control" required>
+
+                        <label>Ingresar monto del descuento</label>
+                        <input id="descuentoDinero" type="number" step="0.01" class="form-control" required>
+                        
+                    </div>
+            
+             
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                    <button type="submit" id="btnNuevo" class="btn btn-primary" translate="1">Ingresar línea de gasto</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+                    <div class="modal fade" style="overflow-y: scroll;" id="modalAltaEdicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Agregar Gastos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="Agregar">
+                                    <div class="modal-body">
+                                        <input id="id" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                        <div class="form-group">
+                                            <label>Código</label>
+                                            <select id="codigo" type="text" class="form-control" required></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <select name="pep" id="pep" onchange="cargarPueblos();" type="text" class="form-control"
+                                                required>
+                                                <option value="">Seleccione un Pep...</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <select name="cuenta" id="cuenta" type="text" class="form-control" required>
+                                                <option value="">Seleccione una Cuenta...</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de Producto</label>
+                                            <input id="gasto" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripcion del gasto</label>
+                                            <input id="descripcion" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio total de producto</label>
+                                            <input id="cantidad" type="number" step="0.01" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de Factura</label>
+                                            <input id="factura" type="text" class="form-control" required></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor</label>
+                                            <select id="proveedor" type="text" class="form-control" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                        <button type="submit" value="btnGuardar" class="btn btn-primary" translate="1">Siguiente</button>
+                                        <button type="submit" value="btnGuardar" id="btnTerminar" class="btn btn-primary" translate="1">Terminar</button>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Editar Línea de Gasto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="Editar">
+                                    <div class="modal-body">
+                                        <input id="idEdit" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                        <div class="form-group">
+                                            <label>Código</label>
+                                            <input id="codigoEdit" type="text"  disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <input name="pep" id="pepEdit" type="text" 
+                                                disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <input name="cuenta" id="cuentaEdit" type="text"  disabled>
+                                               
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de Producto</label>
+                                            <input id="gastoEdit" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripcion del gasto</label>
+                                            <input id="descripcionEdit" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio total de producto</label>
+                                            <input id="cantidadEdit" type="number" step="0.01" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de Factura</label>
+                                            <input id="facturaEdit" type="text" class="form-control" required></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor</label>
+                                            <select id="proveedorEdit" type="text" class="form-control" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                        <button type="submit" value="btnGuardar"  class="btn btn-primary"
+                                            translate="1">Guardar Cambio</button>
+                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modalIntercambiar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Cambiar Cuenta de Línea de Gasto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="Intercambiar">
+                                    <div class="modal-body">
+                                        <input id="idInter" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                        <label>Detalles del Gasto</label>
+                                        <div class="form-group">
+                                            
+                                            <label>Código</label>
+                                            <input id="codigoInter" type="text"  class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <input name="pep" id="pepInter" type="text" 
+                                            class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <input name="cuenta" id="cuentaInter" type="text"  class="form-disabled" disabled>
+                                               
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de Producto</label>
+                                            <input id="gastoInter" type="text" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripcion del gasto</label>
+                                            <input id="descripcionInter" type="text" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio total de producto</label>
+                                            <input id="cantidadInter" type="number" step="0.01" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de Factura</label>
+                                            <input id="facturaInter" type="text" class="form-disabled" disabled></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor</label>
+                                            <input id="proveedorInter" type="text" class="form-disabled" disabled></input>
+                                        </div>
+
+                                        <label>Proyecto Destinatario</label>
+                                        <div class="form-group">
+                                            <label>Proyecto</label>
+                                            <select id="codigoEnviar" type="text" class="form-control" required></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <select  name="pepEnviar" id="pepEnviar"  onchange="cargarCuentas();" type="text" class="form-control" required></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <select  name="cuentaEnviar" id="cuentaEnviar" type="text" class="form-control" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                        <button type="submit" value="btnIntercambiar"  class="btn btn-primary"
+                                            translate="1">Guardar Cambio</button>
+                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modalTerminarFactura" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Agregar Gastos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                    
+                                </div>
+                                <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Sumatoria de Líneas</label>
+                                    <input id="gastoAcumulado" type="text" class="form-control" disabled></input>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>GASTO CON DESCUENTO</label>
+                                    <input id="gastoAcumuladoDescuento" value="₡0" type="text" class="form-control" disabled></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>GASTO CON IVA</label>
+                                    <input id="gastoAcumuladoIva" value="₡0" type="text" class="form-control" disabled></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>GASTO CON IVA Y DESCUENTO</label>
+                                    <input id="gastoAcumuladoIvaDescuento" value="₡0" type="text" class="form-control" disabled></input>
+                                </div>
+
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cerrar</button>
+                             </div>
+                            </div>
+                         </div>
+                  </div>
+
+
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">ConstruID</a> 
+        </div>
+
+    </nav>   
+       <!-- /. NAV TOP  -->
+       <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+            <li class="text-center">
+                <img src="assets/img/logo.png" class="user-image img-responsive"/>
+                </li>
+            
+                
+                <li>
+                    <a class="active-menu" href="dashboard.html"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                </li>
+               <li>
+                    <a  href="panelProyectos.html"><i class="fa fa-bars fa-3x"></i> Proyectos</a>
+                </li>
+                <li>
+                    <a  href="panelPresupuestos.html"><i class="fa fa-bar-chart-o fa-3x"></i> Presupuestos</a>
+                </li>
+                <li  >
+                    <a  href="panelGastos.html"><i class="fa fa-dollar fa-3x"></i> Gastos</a>
+                </li> 
+                  <li  >
+                    <a   href="panelProveedores.html"><i class="fa fa-truck fa-3x"></i> Proveedores</a>
+                </li>
+                <li  >
+                    <a  href="panelPagos.html"><i class="fa fa-credit-card fa-3x"></i> Pagos </a>
+                </li>
+                <li  >
+                    <a  href="panelInventario.html"><i class="fa fa-wrench fa-3x"></i> Inventario </a>
+                </li>			
+                <li  >
+                    <a   href="ordenCompra.html"><i class="fa fa-paste fa-3x"></i> Orden de Compra</a>
+                </li>
+                                   
+               
+              <li  >
+                    <a   href="historial.html"><i class="fa fa-list-alt fa-3x"></i> Historial</a>
+                </li>
+                <li  >
+                    <a   href="confi.html"><i class="fa fa-gear fa-3x"></i> Configuración</a>
+                </li>
+                <li  >
+                    <a   href="../index.html"><i class="fa fa-arrow-left fa-3x"></i> Cerrar Sesión</a>
+                </li>
+            </ul>
+           
+        </div>
+        
+    </nav>  
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                     <h2>Ajuste de Gastos</h2>   
+                        <h5>Bienvenido al panel de ajuste de gastos, desde aquí puedes agregar o visualizar los gastos de proyectos ya creados. </h5>
+                    </div>
+                </div>              
+                 <!-- /. ROW  -->
+                  <hr />
+                  <div class="row">
+          
+                    
+                    <div class="col-md-9 col-sm-12 col-xs-12">
+                        <div class="panel back-dash  bg-color-green" id="btnDescuento" onclick="" style="cursor: pointer;">
+                               <i class="fa fa-dollar  fa-3x"></i><strong> &nbsp; Agregar Gastos</strong>
+                             <p class="text-muted">Presiona aquí para fijar los presupuestos de algún proyecto ya creado </p>
+                             
+                        </div>
+                        
+                       
+                    </div>
+                     <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="panel back-dash bg-color-green"  onclick="location.href =('datatableGastos.html');" style="cursor: pointer;">
+                               <i class="fa fa-eye  fa-3x"></i><strong> &nbsp; Ver Gastos</strong>
+                             <p class="text-muted">Acceder a la tabla de Gastos </p>
+                             
+                        </div>
+                        
+                       
+                    </div>
+
+                  
+                        
+        </div>
+                <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-6">           
+			<div class="panel panel-back noti-box" onclick="location.href =('panelProyectos.html');" style="cursor: pointer;">
+                <span class="icon-box bg-color-red set-icon">
+                    <i class="fa fa-bars"></i>
+                </span>
+                <div class="text-box" >
+                    <p class="main-text">Proyectos</p>
+                    <p class="text-muted">Panel de proyectos</p>
+                </div>
+             </div>
+		     </div>
+                    <div class="col-md-3 col-sm-6 col-xs-6">           
+			<div class="panel panel-back noti-box " onclick="location.href =('panelPresupuestos.html');" style="cursor: pointer;">
+                <span class="icon-box bg-color-blue set-icon">
+                    <i class="fa fa-bar-chart-o"></i>
+                </span>
+                <div class="text-box" >
+                    <p class="main-text">Presupuestos</p>
+                    <p class="text-muted">Panel de Presupuestos</p>
+                </div>
+             </div>
+		     </div>
+                    <div class="col-md-3 col-sm-6 col-xs-6">           
+			<div class="panel panel-back noti-box" onclick="location.href =('panelProveedores.html');" style="cursor: pointer;">
+                <span class="icon-box bg-color-purpure set-icon">
+                    <i class="fa fa-truck"></i>
+                </span>
+                <div class="text-box" >
+                    <p class="main-text">Proveedores</p>
+                    <p class="text-muted">Panel de Proveedores</p>
+                </div>
+             </div>
+		     </div>
+                    <div class="col-md-3 col-sm-6 col-xs-6">           
+			<div class="panel panel-back noti-box" onclick="location.href =('panelPagos.html');" style="cursor: pointer;">
+                <span class="icon-box bg-color-brown set-icon">
+                    <i class="fa fa-credit-card"></i>
+                </span>
+                <div class="text-box" >
+                    <p class="main-text">Pagos</p>
+                    <p class="text-muted">Panel de Pagos</p>
+                </div>
+             </div>
+		     </div>
+             <div class="col-md-3 col-sm-6 col-xs-6">           
+                <div class="panel panel-back noti-box" onclick="location.href =('panelInventario.html');" style="cursor: pointer;">
+                    <span class="icon-box bg-color-yellow set-icon">
+                        <i class="fa fa-wrench"></i>
+                    </span>
+                    <div class="text-box" >
+                        <p class="main-text">Inventario</p>
+                        <p class="text-muted">Panel de Inventario</p>
+                    </div>
+                 </div>
+                 </div>
+			</div>
+                 <!-- /. ROW  -->
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+     <!-- MORRIS CHART SCRIPTS -->
+     <script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="assets/js/morris/morris.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+
+    
+
+     <!-- SUM()  Datatables-->
+
+		<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase.js"></script>
+		
+		<!-- datatables -->
+		<!-- The core Firebase JS SDK is always required and must be listed first -->
+		<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+		
+		<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+
+
+
+
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+
+<!--  Datatables JS-->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+<!-- SUM()  Datatables-->
+<script src="https://cdn.datatables.net/plug-ins/1.10.20/api/sum().js"></script>
+         <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/pruebagasto.js"></script>
+
+    <script type="text/javascript">
+        function mostrar(id) {
+            const cero = 0;
+            if (id == "descuentoP") {
+                $("#descuentoPo").show();
+                $("#descuentoDi").hide();
+    
+                $('#descuentoDinero').val(cero);
+                $('#montoFactura').val(cero);
+            }
+    
+            if (id == "descuentoD") { 
+                $("#descuentoPo").hide();
+                $("#descuentoDi").show(); 
+    
+                $('#descuentoPorcentaje').val(cero);
+            }
+    
+            if (id == "sinDescuento") {
+                $("#descuentoPo").hide();
+                $("#descuentoDi").hide();
+    
+                $('#descuentoPorcentaje').val(cero);
+                $('#descuentoDinero').val(cero);
+                $('#montoFactura').val(cero);
+            }
+            }
+            </script>
+             <script>
+             function asignarProyecto() {
+
+                db.ref("moneda").update({
+                    pActual: $.trim($('#pActual').val()),
+    
+                });
+              
+            }
+    
+            function asignarPep() {
+    
+    db.ref("moneda").update({
+        pepActual: $.trim($('#pepEnviar2').val()),
+    
+    });
+    location.reload();
+    }
+    
+    function asignarCuenta() {
+        let pep = $.trim($('#pepEnviar2').val());
+        let cuentaEnviar = $.trim($('#cuentaEnviar2').val());
+        if (pep == "pep01") {
+                pep = "Pep 21X-01-C";
+            } else
+                if (pep == "pep02") {
+                    pep = "Pep 21X-02-C";
+                } else
+                    if (pep == "pep03") {
+                        pep = "Pep 21X-03-C";
+                    } else
+                        if (pep == "pep04") {
+                            pep = "Pep 21X-04-C";
+                        } else
+                            if (pep == "pep05") {
+                                pep = "Pep 21X-05-C";
+                            } else
+                                if (pep == "pep06") {
+                                    pep = "Pep 21X-06-C";
+                                } else
+                                    if (pep == "pep07") {
+                                        pep = "Pep 21X-07-C";
+                                    } else
+                                        if (pep == "pep08") {
+                                            pep = "Pep 21X-08-C";
+                                        } else
+                                            if (pep == "pep09") {
+                                                pep = "Pep 21X-09-C";
+                                            } else
+                                                if (pep == "pep10") {
+                                                    pep = "Pep 21X-10-C";
+                                                } else
+                                                    if (pep == "pep11") {
+                                                        pep = "Pep 21X-11-C";
+                                                    } else
+                                                        if (pep == "pep12") {
+                                                            pep = "Pep 21X-12-C";
+                                                        } else
+                                                            if (pep == "pep13") {
+                                                                pep = "Pep 21X-13-C";
+                                                            } else
+                                                                if (pep == "pep14") {
+                                                                    pep = "Pep 21X-14-C";
+                                                                } else
+                                                                    if (pep == "pep15") {
+                                                                        pep = "Pep 21X-15-C";
+                                                                    } else
+                                                                        if (pep == "pep16") {
+                                                                            pep = "Pep 21X-16-C";
+                                                                        } else
+                                                                            if (pep == "pep17") {
+                                                                                pep = "Pep 21X-17-C";
+                                                                            } else
+                                                                                if (pep == "pep18") {
+                                                                                    pep = "Pep 21X-18-C";
+                                                                                } else
+                                                                                    if (pep == "pep19") {
+                                                                                        pep = "Pep 21X-19-C";
+                                                                                    } else
+                                                                                        if (pep == "pep20") {
+                                                                                            pep = "Pep 21X-20-C";
+                                                                                        } else
+                                                                                            if (pep == "pep21") {
+                                                                                                pep = "Pep 21X-21-C";
+                                                                                            } else
+                                                                                                if (pep == "pep22") {
+                                                                                                    pep = "Pep 21X-2-C";
+                                                                                                } else
+                                                                                                    if (pep == "pep23") {
+                                                                                                        pep = "Pep 21X-23-C";
+                                                                                                    } else
+                                                                                                        if (pep == "pep24") {
+                                                                                                            pep = "Pep 21X-24-C";
+                                                                                                        } else
+                                                                                                            if (pep == "pep25") {
+                                                                                                                pep = "Pep 21X-25-C";
+                                                                                                            } else
+                                                                                                                if (pep == "pep26") {
+                                                                                                                    pep = "Pep 21X-26-C";
+          
+            console.log(cuentaEnviar);                                                                               }
+            cuenta = cuentaEnviar.slice(13, -1);
+    db.ref("moneda").update({
+        pepActual: pep,
+        cuentaActual: cuenta,
+    
+    });
+    location.reload();
+    }
+    </script>
+</body>
+</html>

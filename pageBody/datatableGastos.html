@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConstruID
+    </title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+     <!-- MORRIS CHART STYLES-->
+   
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+     <!-- TABLE STYLES-->
+    <link href="assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="modal fade" style="overflow-y: scroll;" id="modalAltaEdicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-light">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Gastos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="Agregar">
+                <div class="modal-body">
+                    <input id="id" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                    <div class="form-group">
+                        <label>Código</label>
+                        <select id="codigo" type="text" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pep</label>
+                        <select name="pep" id="pep" onchange="cargarPueblos();" type="text" class="form-control"
+                            required>
+                            <option value="">Seleccione un Pep...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cuenta</label>
+                        <select name="cuenta" id="cuenta" type="text" class="form-control" required>
+                            <option value="">Seleccione una Cuenta...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad de Producto</label>
+                        <input id="gasto" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripcion del gasto</label>
+                        <input id="descripcion" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio total de producto</label>
+                        <input id="cantidad" type="number" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Factura</label>
+                        <input id="factura" type="text" class="form-control" required></input>
+                    </div>
+                    <div class="form-group">
+                        <label>Proveedor</label>
+                        <select id="proveedor" type="text" class="form-control" required></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                    <button type="submit" value="btnGuardar" class="btn btn-primary" translate="1">Siguiente</button>
+                    <button type="submit" value="btnGuardar" id="btnTerminar" class="btn btn-primary" translate="1">Terminar</button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Editar Línea de Gasto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="Editar">
+                                    <div class="modal-body">
+                                        <input id="idEdit" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                        <div class="form-group">
+                                            <label>Código</label>
+                                            <input id="codigoEdit" type="text"  disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <input name="pep" id="pepEdit" type="text" 
+                                                disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <input name="cuenta" id="cuentaEdit" type="text"  disabled>
+                                               
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de Producto</label>
+                                            <input id="gastoEdit" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripcion del gasto</label>
+                                            <input id="descripcionEdit" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio total de producto</label>
+                                            <input id="cantidadEdit" type="number" step="0.01" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de Factura</label>
+                                            <input id="facturaEdit" type="text" class="form-control" required></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor</label>
+                                            <select id="proveedorEdit" type="text" class="form-control" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                        <button type="submit" value="btnGuardar"  class="btn btn-primary"
+                                            translate="1">Guardar Cambio</button>
+                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modalIntercambiar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h5 class="modal-title" id="exampleModalLabel">Cambiar Cuenta de Línea de Gasto</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="Intercambiar">
+                                    <div class="modal-body">
+                                        <input id="idInter" type="hidden"> <!-- ID que vamos a recibir de firebase -->
+                                        <label>Detalles del Gasto</label>
+                                        <div class="form-group">
+                                            
+                                            <label>Código</label>
+                                            <input id="codigoInter" type="text"  class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                            <input name="pep" id="pepInter" type="text" 
+                                            class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cuenta</label>
+                                            <input name="cuenta" id="cuentaInter" type="text"  class="form-disabled" disabled>
+                                               
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de Producto</label>
+                                            <input id="gastoInter" type="text" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripcion del gasto</label>
+                                            <input id="descripcionInter" type="text" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio total de producto</label>
+                                            <input id="cantidadInter" type="number" step="0.01" class="form-disabled" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de Factura</label>
+                                            <input id="facturaInter" type="text" class="form-disabled" disabled></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor</label>
+                                            <input id="proveedorInter" type="text" class="form-disabled" disabled></input>
+                                        </div>
+
+                                        <label>Proyecto Destinatario</label>
+                                        <div class="form-group">
+                                            <label>Proyecto</label>
+                                            <select id="codigoEnviar" type="text" class="form-control" required></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pep</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <select  name="pepEnviar" id="pepEnviar"  onchange="cargarCuentas();" type="text" class="form-control" required></select>
+                                            <label>Cuenta</label>
+                                            <select  name="cuentaEnviar" id="cuentaEnviar" type="text" class="form-control" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="2">Cancelar</button>
+                                        <button type="submit" value="btnIntercambiar"  class="btn btn-primary"
+                                            translate="1">Guardar Cambio</button>
+                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">ConstruID</a> 
+            </div>
+  <div style="color: white;
+padding: 15px 50px 5px 50px;
+float: right;
+font-size: 16px;"> <a href="panelGastos.html" class="btn btn-dange square-btn-adjust">Volver al Panel de Gastos</a> </div>
+        </nav>   
+           <!-- /. NAV TOP  -->
+           <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+				<li class="text-center">
+                    <img src="assets/img/logo.png" class="user-image img-responsive"/>
+					</li>
+				
+					
+                    <li>
+                        <a class="active-menu" href="dashboard.html"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                    </li>
+                   <li>
+                        <a  href="panelProyectos.html"><i class="fa fa-bars fa-3x"></i> Proyectos</a>
+                    </li>
+                    <li>
+                        <a  href="panelPresupuestos.html"><i class="fa fa-bar-chart-o fa-3x"></i> Presupuestos</a>
+                    </li>
+                    <li  >
+                        <a  href="panelGastos.html"><i class="fa fa-dollar fa-3x"></i> Gastos</a>
+                    </li> 
+                      <li  >
+                        <a   href="panelProveedores.html"><i class="fa fa-truck fa-3x"></i> Proveedores</a>
+                    </li>
+                    <li  >
+                        <a  href="panelPagos.html"><i class="fa fa-credit-card fa-3x"></i> Pagos </a>
+                    </li>
+                    <li  >
+                        <a  href="panelInventario.html"><i class="fa fa-wrench fa-3x"></i> Inventario </a>
+                    </li>			
+					<li  >
+                        <a   href="ordenCompra.html"><i class="fa fa-paste fa-3x"></i> Orden de Compra</a>
+                    </li>
+					                   
+                   
+                  <li  >
+                        <a   href="historial.html"><i class="fa fa-list-alt fa-3x"></i> Historial</a>
+                    </li>
+                    <li  >
+                        <a   href="confi.html"><i class="fa fa-gear fa-3x"></i> Configuración</a>
+                    </li>
+                    <li  >
+                        <a   href="../index.html"><i class="fa fa-arrow-left fa-3x"></i> Cerrar Sesión</a>
+                    </li>
+                </ul>
+               
+            </div>
+            
+        </nav>  
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                     <h2>Gastos</h2>   
+                        <h5>Aquí puedes visualizar, buscar, editar, eliminar y cambiar la cuenta de gastos registrados. </h5>
+                       
+                    </div>
+                </div>
+                 <!-- /. ROW  -->
+                 <hr />
+                 <div class="panel-body col-sm-3 col-xs-3">
+                    <select class="form-control " id="pActual" onchange="asignarProyecto();" type="text" >
+                                   
+                       <option value="" >Seleccione un proyecto</option>
+               
+                   </select>
+               </div>
+               <div class="panel-body col-sm-3 col-xs-3">
+                <select name="pepEnviar2" class="form-control " id="pepEnviar2"  onchange="cargarCuentas2();" type="text" required>
+                               
+                   <option value="" >Seleccione un pep</option>
+           
+               </select>
+           </div>
+           <div class="panel-body col-sm-3 col-xs-3">
+            <select  name="cuentaEnviar2" class="form-control " id="cuentaEnviar2" onchange="asignarCuenta();" type="text" required>
+                           
+               <option value="" >Seleccione una cuenta</option>
+       
+           </select>
+       </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Advanced Tables -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Gastos
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="tablaProductos" class="table table-striped table-bordered" style="width:100%">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Proyecto</th>
+                                            <th>_____Pep_____</th>
+                                            <th>Cuenta</th>
+                                            <th>Cantidad de producto</th>
+                                            <th>Descripcion del gasto</th>
+                                            <th>Precio total de producto</th>
+                                            <th>Proveedor</th>
+                                            <th>Número de Factura</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table> 
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!--End Advanced Tables -->
+                </div>
+            </div>
+                <!-- /. ROW  -->
+          
+          
+                <!-- /. ROW  -->
+            
+                <!-- /. ROW  -->
+        </div>
+               
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+     <!-- /. WRAPPER  -->
+     
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+  <script src="assets/js/bootstrap.min.js"></script>
+  <!-- METISMENU SCRIPTS -->
+  <script src="assets/js/jquery.metisMenu.js"></script>
+   <!-- DATA TABLE SCRIPTS -->
+  <script src="assets/js/dataTables/jquery.dataTables.js"></script>
+  <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+      <script>
+          $(document).ready(function () {
+              $('#dataTables-example').dataTable();
+          });
+  </script>
+  <!-- SUM()  Datatables-->
+
+      <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase.js"></script>
+      
+      <!-- datatables -->
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+      
+      <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.2/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+
+<!--  Datatables JS-->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+<!-- SUM()  Datatables-->
+<script src="https://cdn.datatables.net/plug-ins/1.10.20/api/sum().js"></script>
+       <!-- CUSTOM SCRIPTS -->
+  <script src="assets/js/custom.js"></script>
+    <script src="assets/js/pruebagasto.js"></script>
+    <script>
+        function asignarProyecto() {
+
+db.ref("moneda").update({
+    pActual: $.trim($('#pActual').val()),
+
+});
+
+}
+
+function asignarPep() {
+
+db.ref("moneda").update({
+pepActual: $.trim($('#pepEnviar2').val()),
+
+});
+location.reload();
+}
+
+    function asignarCuenta() {
+        let pep = $.trim($('#pepEnviar2').val());
+        let cuentaEnviar = $.trim($('#cuentaEnviar2').val());
+        if (pep == "pep01") {
+                pep = "Pep 21X-01-C";
+            } else
+                if (pep == "pep02") {
+                    pep = "Pep 21X-02-C";
+                } else
+                    if (pep == "pep03") {
+                        pep = "Pep 21X-03-C";
+                    } else
+                        if (pep == "pep04") {
+                            pep = "Pep 21X-04-C";
+                        } else
+                            if (pep == "pep05") {
+                                pep = "Pep 21X-05-C";
+                            } else
+                                if (pep == "pep06") {
+                                    pep = "Pep 21X-06-C";
+                                } else
+                                    if (pep == "pep07") {
+                                        pep = "Pep 21X-07-C";
+                                    } else
+                                        if (pep == "pep08") {
+                                            pep = "Pep 21X-08-C";
+                                        } else
+                                            if (pep == "pep09") {
+                                                pep = "Pep 21X-09-C";
+                                            } else
+                                                if (pep == "pep10") {
+                                                    pep = "Pep 21X-10-C";
+                                                } else
+                                                    if (pep == "pep11") {
+                                                        pep = "Pep 21X-11-C";
+                                                    } else
+                                                        if (pep == "pep12") {
+                                                            pep = "Pep 21X-12-C";
+                                                        } else
+                                                            if (pep == "pep13") {
+                                                                pep = "Pep 21X-13-C";
+                                                            } else
+                                                                if (pep == "pep14") {
+                                                                    pep = "Pep 21X-14-C";
+                                                                } else
+                                                                    if (pep == "pep15") {
+                                                                        pep = "Pep 21X-15-C";
+                                                                    } else
+                                                                        if (pep == "pep16") {
+                                                                            pep = "Pep 21X-16-C";
+                                                                        } else
+                                                                            if (pep == "pep17") {
+                                                                                pep = "Pep 21X-17-C";
+                                                                            } else
+                                                                                if (pep == "pep18") {
+                                                                                    pep = "Pep 21X-18-C";
+                                                                                } else
+                                                                                    if (pep == "pep19") {
+                                                                                        pep = "Pep 21X-19-C";
+                                                                                    } else
+                                                                                        if (pep == "pep20") {
+                                                                                            pep = "Pep 21X-20-C";
+                                                                                        } else
+                                                                                            if (pep == "pep21") {
+                                                                                                pep = "Pep 21X-21-C";
+                                                                                            } else
+                                                                                                if (pep == "pep22") {
+                                                                                                    pep = "Pep 21X-2-C";
+                                                                                                } else
+                                                                                                    if (pep == "pep23") {
+                                                                                                        pep = "Pep 21X-23-C";
+                                                                                                    } else
+                                                                                                        if (pep == "pep24") {
+                                                                                                            pep = "Pep 21X-24-C";
+                                                                                                        } else
+                                                                                                            if (pep == "pep25") {
+                                                                                                                pep = "Pep 21X-25-C";
+                                                                                                            } else
+                                                                                                                if (pep == "pep26") {
+                                                                                                                    pep = "Pep 21X-26-C";
+          
+            console.log(cuentaEnviar);                                                                               }
+            cuenta = cuentaEnviar.slice(13, -1);
+    db.ref("moneda").update({
+        pepActual: pep,
+        cuentaActual: cuenta,
+    
+    });
+    location.reload();
+    }
+    </script>
+</body>
+</html>
